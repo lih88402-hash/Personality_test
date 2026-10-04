@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>你的隱藏人格是什麼？</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f7f9;color:#363a40;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+.wrap{max-width:700px;width:92%;margin:40px auto}.card{background:white;border:1px solid #e8eaed;border-radius:20px;padding:30px;box-shadow:0 8px 28px #00000008}
+h1{font-size:28px;margin:0 0 12px}h2{font-size:21px}p{line-height:1.8;color:#747981}
+.center{text-align:center}.small{font-size:13px;color:#858a91}
+button{border:0;border-radius:11px;padding:13px 21px;background:#657487;color:#fff;font-size:16px;cursor:pointer}
+button.secondary{background:#edf0f3;color:#555}button:disabled{opacity:.4}
+.progressTop{display:flex;justify-content:space-between;color:#858a91;font-size:14px;margin-bottom:8px}
+.progress{height:7px;background:#eceef1;border-radius:9px;overflow:hidden}.bar{height:100%;background:#93a0af;width:0}
+.q{font-size:21px;font-weight:600;line-height:1.5;margin:25px 0 20px}
+.options{display:grid;gap:10px}.option{width:100%;text-align:left;background:#fafafa;color:#41464d;border:1px solid #e1e4e8}
+.option.selected{background:#e9edf2;border-color:#8795a5}
+.nav{display:flex;justify-content:space-between;margin-top:24px}#notice{height:22px;margin-top:10px;color:#a16d6d}
+.result{background:#f2f4f6;border-radius:15px;padding:22px;margin:18px 0}.main{font-size:28px;font-weight:700}
+.row{display:grid;grid-template-columns:85px 1fr 30px;gap:9px;align-items:center;margin:11px 0;font-size:14px}
+.rbar{height:8px;background:#e6e8eb;border-radius:9px;overflow:hidden}.rbar i{display:block;height:100%;background:#97a3b1}
+.tag{display:inline-block;background:#e9edf1;border-radius:99px;padding:5px 9px;margin:4px;font-size:13px}
+.hidden{display:none}@media(max-width:500px){.wrap{margin:22px auto}.card{padding:22px 17px}h1{font-size:25px}}
+</style></head><body><div class="wrap">
+
+<section id="start" class="card center"><h1>你的隱藏人格是什麼？</h1>
+<p>30 道題目，看看你的主人格、副人格，以及藏在更深處的性格。</p>
+<button id="startBtn">開始測試</button><p class="small">娛樂性測試，結果僅供參考。</p></section>
+
+<section id="quiz" class="card hidden"><div class="progressTop"><span id="num"></span><span id="pct"></span></div>
+<div class="progress"><div id="progress" class="bar"></div></div><div id="question" class="q"></div>
+<div id="options" class="options"></div><div id="notice"></div>
+<div class="nav"><button id="prev" class="secondary">上一題</button><button id="next">下一題</button></div></section>
+
+<section id="result" class="card hidden"><div class="center"><p class="small">測試結果</p><h1>你的主人格</h1>
+<div class="result"><div id="main" class="main"></div><p id="desc"></p><div id="tags"></div></div></div>
+<h2>人格排序</h2><div id="ranking"></div><div class="center" style="margin-top:28px"><button id="again">重新測試</button></div></section>
+</div>
+
+<script>
+const questions=[["朋友突然不回你訊息，你會？", ["再傳幾句，直到他回", "算了，可能在忙", "表面沒事，心裡記著", "直接問他是不是討厭我", "等他自己回來"]], ["有人惹到你，你通常會？", ["當場反擊", "笑著帶過", "記住，但不說", "直接冷掉", "想辦法讓對方後悔"]], ["喜歡的人和別人走得很近？", ["有點吃醋但不說", "直接問他們什麼關係", "默默觀察", "假裝完全不在意", "想把他拉回自己身邊"]], ["你最討厭別人？", ["欺騙", "背叛", "太吵", "管太多", "看不起自己"]], ["遇到陌生人時，你通常？", ["主動聊天", "等對方開口", "安靜觀察", "有禮貌但保持距離", "很快就熟起來"]], ["朋友哭著找你，你會？", ["陪他聊到心情變好", "給他實際建議", "靜靜陪著", "想辦法幫他解決", "跟著一起難過"]], ["你做事情通常？", ["先做再說", "想好計畫再做", "看當下心情", "一定做到最好", "做到一半可能改變想法"]], ["有人說你很難看透，你會？", ["覺得很正常", "覺得有點有趣", "故意不解釋", "馬上否認", "笑而不答"]], ["發現朋友騙了你？", ["直接問清楚", "給他一次機會", "表面原諒，心裡記住", "慢慢疏遠", "想知道他為什麼騙我"]], ["突然有一大筆錢？", ["存起來", "買自己想要的東西", "帶朋友一起玩", "投資未來", "先不告訴任何人"]], ["你更相信？", ["感覺", "邏輯", "經驗", "第一印象", "命運"]], ["被人誤會時，你會？", ["解釋清楚", "懶得解釋", "看對方值不值得解釋", "有點難過", "讓時間證明"]], ["你喜歡的相處模式？", ["黏在一起", "保持自己的空間", "安靜陪伴", "浪漫驚喜", "強烈又專一"]], ["喜歡的人受傷了？", ["第一時間陪他", "幫他想辦法", "緊張到不知道說什麼", "默默照顧", "很生氣是誰弄傷他的"]], ["遇到困難時，你第一反應？", ["自己想辦法", "找朋友幫忙", "先逃避一下", "冷靜分析", "直接硬闖"]], ["別人突然誇你，你會？", ["開心接受", "害羞躲開", "懷疑他是不是有目的", "嘴上說還好", "開玩笑帶過"]], ["你比較像哪一種？", ["安靜型", "活潑型", "情緒型", "理性型", "隨性型"]], ["有人一直挑戰你的底線？", ["直接警告", "忍到受不了才爆發", "想辦法反制", "直接離開", "表面平靜，心裡記仇"]], ["朋友要你保守秘密？", ["絕對不說", "看事情嚴不嚴重", "有點憋不住", "當作不知道", "一直放在心裡"]], ["計畫突然被打亂？", ["重新安排", "覺得很煩", "隨機應變", "有點慌", "乾脆不做了"]], ["你更容易因為什麼生氣？", ["被欺騙", "被忽視", "被控制", "被背叛", "被誤會"]], ["你希望別人怎麼形容你？", ["溫柔", "強大", "有趣", "神秘", "聰明"]], ["有人喜歡你，但你不喜歡他？", ["禮貌拒絕", "慢慢疏遠", "直接說清楚", "有點不好意思", "看看再說"]], ["獨處時最常做什麼？", ["聽歌", "玩遊戲", "想很多事情", "看小說／電影", "睡覺"]], ["有人搶走你很在乎的人？", ["默默難過", "努力把他追回來", "尊重他的選擇", "表面祝福", "不會輕易放手"]], ["你做錯事情時？", ["馬上道歉", "嘴硬一下", "自己偷偷反省", "找理由解釋", "裝作沒事"]], ["有人說你變了？", ["問他哪裡變了", "覺得很正常", "有點在意", "笑著帶過", "反問他：不好嗎？"]], ["最希望擁有哪種能力？", ["看透人心", "控制時間", "隱身", "預知未來", "讓所有人喜歡自己"]], ["遇到喜歡的東西會？", ["直接得到它", "研究很久", "猶豫很久", "默默收藏", "分享給重要的人"]], ["如果人生是一場遊戲，你會？", ["按自己的方式通關", "找出遊戲規則", "和朋友一起玩", "挑戰最高難度", "隨便玩，開心就好"]]];
+const maps=[["病嬌系", "冷淡系", "社恐系", "神秘系", "完美系"], ["溫柔系", "浪漫系", "樂觀系", "野心系", "觀察系"], ["黏人系", "毒舌系", "正義系", "冒險系", "戲精系"], ["社牛系", "悲觀系", "自由系", "忠誠系", "天然系"], ["敏感系", "慵懶系", "治癒系", "病嬌系", "冷淡系"], ["神秘系", "完美系", "獨立系", "溫柔系", "浪漫系"], ["野心系", "觀察系", "腹黑系", "黏人系", "毒舌系"], ["冒險系", "戲精系", "傲嬌系", "社牛系", "悲觀系"], ["忠誠系", "天然系", "理智系", "敏感系", "慵懶系"], ["病嬌系", "冷淡系", "社恐系", "神秘系", "完美系"], ["溫柔系", "浪漫系", "樂觀系", "野心系", "觀察系"], ["黏人系", "毒舌系", "正義系", "冒險系", "戲精系"], ["社牛系", "悲觀系", "自由系", "忠誠系", "天然系"], ["敏感系", "慵懶系", "治癒系", "病嬌系", "冷淡系"], ["神秘系", "完美系", "獨立系", "溫柔系", "浪漫系"], ["野心系", "觀察系", "腹黑系", "黏人系", "毒舌系"], ["冒險系", "戲精系", "傲嬌系", "社牛系", "悲觀系"], ["忠誠系", "天然系", "理智系", "敏感系", "慵懶系"], ["病嬌系", "冷淡系", "社恐系", "神秘系", "完美系"], ["溫柔系", "浪漫系", "樂觀系", "野心系", "觀察系"], ["黏人系", "毒舌系", "正義系", "冒險系", "戲精系"], ["社牛系", "悲觀系", "自由系", "忠誠系", "天然系"], ["敏感系", "慵懶系", "治癒系", "病嬌系", "冷淡系"], ["神秘系", "完美系", "獨立系", "溫柔系", "浪漫系"], ["野心系", "觀察系", "腹黑系", "黏人系", "毒舌系"], ["冒險系", "戲精系", "傲嬌系", "社牛系", "悲觀系"], ["忠誠系", "天然系", "理智系", "敏感系", "慵懶系"], ["病嬌系", "冷淡系", "社恐系", "神秘系", "完美系"], ["溫柔系", "浪漫系", "樂觀系", "野心系", "觀察系"], ["黏人系", "毒舌系", "正義系", "冒險系", "戲精系"]];
+const types=["病嬌系", "腹黑系", "天然系", "溫柔系", "傲嬌系", "冷淡系", "黏人系", "理智系", "浪漫系", "社牛系", "社恐系", "毒舌系", "敏感系", "樂觀系", "悲觀系", "神秘系", "正義系", "慵懶系", "野心系", "自由系", "完美系", "冒險系", "治癒系", "觀察系", "忠誠系", "獨立系", "戲精系"];
+const desc={"病嬌系": "感情濃度較高，重視專一與連結，一旦認定就不容易放下。", "腹黑系": "表面平靜，心裡卻常常想得很多，擅長觀察局勢。", "天然系": "真誠自然，依照直覺行動，有時反應讓人意外。", "溫柔系": "很容易注意別人的感受，習慣溫和地陪伴身邊的人。", "傲嬌系": "不太習慣直接表達在乎，嘴上可能很硬，行動卻很誠實。", "冷淡系": "不喜歡過度表露自己，建立信任需要時間。", "黏人系": "重視陪伴與安全感，喜歡和重要的人保持聯繫。", "理智系": "遇到事情會先分析，再決定怎麼做。", "浪漫系": "容易被細節、氛圍與真誠的情感打動。", "社牛系": "比較敢主動交流，面對陌生環境也能快速融入。", "社恐系": "面對陌生環境會先觀察，熟悉後才會放鬆。", "毒舌系": "說話直接、反應快，偶爾一句吐槽就能抓到重點。", "敏感系": "很容易察覺語氣、表情和氣氛的細微變化。", "樂觀系": "習慣往前看，即使不順利也容易找到重新開始的方法。", "悲觀系": "習慣先想最壞的可能，因此做決定比較謹慎。", "神秘系": "不會把所有想法都說出來，需要相處才能真正了解。", "正義系": "重視原則與公平，遇到不合理的事情容易站出來。", "慵懶系": "不喜歡把生活排得太滿，更希望按照舒服的節奏生活。", "野心系": "有自己的目標，希望一步步證明自己的能力。", "自由系": "重視自己的選擇與空間，不喜歡被過度限制。", "完美系": "對自己要求較高，做事情會特別注意細節。", "冒險系": "喜歡新鮮感與挑戰，對未知事物容易產生好奇。", "治癒系": "重視情緒與陪伴，常能讓身邊的人感覺被理解。", "觀察系": "習慣先看、先聽、先理解，再決定怎麼行動。", "忠誠系": "一旦認定一段關係就會很珍惜，不容易輕易改變。", "獨立系": "習慣靠自己的力量處理問題，也珍惜自己的空間。", "戲精系": "情緒表現豐富，反應生動，生活裡很有自己的小劇場。"};
+let current=0,answers=Array(30).fill(null);
+
+const $=id=>document.getElementById(id);
+function show(id){["start","quiz","result"].forEach(x=>$(x).classList.add("hidden"));$(id).classList.remove("hidden");}
+function render(){
+ const [q,opts]=questions[current]; $("num").textContent=(current+1)+" / 30";
+ const percent=Math.round((current)/30*100);$("pct").textContent=percent+"%";$("progress").style.width=percent+"%";
+ $("question").textContent=q;$("notice").textContent="";$("options").innerHTML="";
+ opts.forEach((text,i)=>{const b=document.createElement("button");b.className="option"+(answers[current]===i?" selected":"");
+ b.textContent=String.fromCharCode(65+i)+"　"+text;b.onclick=()=>{answers[current]=i;render()};$("options").appendChild(b)});
+ $("prev").disabled=current===0;$("next").textContent=current===29?"查看結果":"下一題";
+}
+function start(){current=0;answers=Array(30).fill(null);show("quiz");render()}
+function next(){
+ if(answers[current]===null){$("notice").textContent="請先選擇這一題的答案。";return}
+ if(current<29){current++;render()}else result();
+}
+function result(){
+ const scores={};types.forEach(t=>scores[t]=0);
+ answers.forEach((a,i)=>scores[maps[i][a]]++);
+ const rank=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+ const main=rank[0][0];$("main").textContent=main;$("desc").textContent=desc[main];
+ $("tags").innerHTML=["性格特徵","個人傾向","隱藏面"].map(x=>`<span class="tag">${x}</span>`).join("");
+ $("ranking").innerHTML=rank.slice(0,8).map((r,i)=>`<div class="row"><span>${i===0?"主人格":i===1?"副人格":i===2?"隱藏人格":i===3?"潛在人格":r[0]}</span><div class="rbar"><i style="width:${r[1]/30*100}%"></i></div><b>${r[1]}</b></div>`).join("");
+ show("result");window.scrollTo(0,0);
+}
+$("startBtn").onclick=start;$("next").onclick=next;$("prev").onclick=()=>{if(current>0){current--;render()}};
+$("again").onclick=start;
+</script></body></html>
